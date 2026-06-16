@@ -1,170 +1,348 @@
-# Automated Order Confirmation AI Agent
+Automated Order Confirmation AI Agent
 
-## Overview
+Overview
 
-Automated Order Confirmation AI Agent is a SaaS platform designed to reduce fake orders, return-to-origin (RTO) costs, and manual verification efforts by automatically calling customers after an order is placed.
+Automated Order Confirmation AI Agent is a SaaS platform designed to reduce fake orders, return-to-origin (RTO) costs, and manual verification efforts by automatically verifying customer orders after checkout.
 
-The platform receives an order, initiates an automated voice call, and updates the order status based on the customer's response.
+The platform receives an order, stores it in a centralized database, triggers an AI-powered confirmation workflow, and updates order status based on customer actions.
 
-### Example Call Flow
+The long-term vision is to provide e-commerce businesses with a fully automated order verification platform powered by voice AI.
 
-> Hello, this is an automated order confirmation call.
+⸻
 
-> To confirm your order, press 1.
+Milestone 1 Complete
 
-> To cancel your order, press 2.
+Milestone 1 focuses on building the core platform foundation and automation workflow before integrating real voice calling providers.
 
-Based on the customer's selection:
+Completed Workflow
 
-- Press 1 → Order Confirmed
-- Press 2 → Order Cancelled
-- No Response → Retry Logic
+Create Order
+↓
+Store in Database
+↓
+Trigger AI Agent
+↓
+Process Order Action
+↓
+Update Database
+↓
+Live Dashboard Update
 
----
+Current system supports:
 
-## Goals
+- Order Creation
+- Order Dashboard
+- PostgreSQL Database
+- Prisma ORM
+- FastAPI Agent Layer
+- Automated Agent Triggering
+- Order Confirmation Workflow
+- Order Cancellation Workflow
+- Live Status Updates
 
-### MVP Goals
+⸻
 
-- Create orders manually
-- View order list
-- Store orders in PostgreSQL
-- Trigger automated calls
-- Capture customer confirmation
-- Automatically update order status
+Example Confirmation Flow
 
-### Future Goals
+Order Created
+↓
+AI Agent Starts
+↓
+CALLING
+↓
+CONFIRMED
 
-- Conversational AI Voice Agent
-- Shopify Integration
-- WooCommerce Integration
-- WhatsApp Confirmation
-- SMS Fallback
-- Multi-tenant SaaS
-- Analytics Dashboard
-- Fraud Detection
+or
 
----
+Order Created
+↓
+AI Agent Starts
+↓
+CALLING
+↓
+CANCELLED
 
-## Tech Stack
+⸻
 
-### Frontend
+Tech Stack
 
-- Next.js
+Frontend
+
+- Next.js 16
 - TypeScript
 - Tailwind CSS
 - Prisma ORM
 
-### Backend
+Backend
 
 - Python
 - FastAPI
-- Twilio Voice API
-- OpenAI (Future)
+- Requests
+- Agent Architecture
 
-### Database
+Database
 
 - PostgreSQL
+- Neon Database
 
----
+⸻
 
-## Project Structure
+Project Structure
 
-text ai-order-confirmation/ ├── frontend/ │ ├── app/ │ ├── components/ │ ├── lib/ │ ├── prisma/ │ └── package.json │ ├── backend/ │ ├── app/ │ │ ├── api/ │ │ ├── services/ │ │ ├── workers/ │ │ └── main.py │ │ │ ├── requirements.txt │ └── .env │ ├── docker-compose.yml ├── README.md └── .gitignore
+ai-order-confirmation/
+├── frontend/
+│
+│ ├── app/
+│ │ ├── api/
+│ │ ├── orders/
+│ │ └── page.tsx
+│ │
+│ ├── lib/
+│ │ └── prisma.ts
+│ │
+│ ├── prisma/
+│ │ ├── schema.prisma
+│ │ └── migrations/
+│ │
+│ └── package.json
+│
+├── backend/
+│
+│ ├── app/
+│ │
+│ ├── agents/
+│ │ └── order_confirmation.py
+│ │
+│ ├── api/
+│ │ └── call.py
+│ │
+│ ├── services/
+│ │ └── voice_provider.py
+│ │
+│ └── main.py
+│
+│ ├── requirements.txt
+│ └── .env
+│
+├── README.md
+├── docker-compose.yml
+└── .gitignore
 
----
+⸻
 
-## Architecture
+Architecture
 
-text Customer │ ▼ Order Created │ ▼ Next.js Application │ ▼ PostgreSQL │ ▼ Call Trigger │ ▼ FastAPI Service │ ▼ Twilio Voice API │ ▼ Customer Receives Call │ ├── Press 1 │ ▼ │ Confirm Order │ └── Press 2 ▼ Cancel Order
+Customer
+↓
+Next.js Frontend
+↓
+Order API
+↓
+PostgreSQL (Neon)
+↓
+FastAPI Agent
+↓
+OrderConfirmationAgent
+↓
+VoiceProvider
+↓
+Order Status Update
+↓
+Dashboard Refresh
 
----
+⸻
 
-## Order Status Flow
+Database Schema
 
-text PENDING │ ▼ CALLING │ ├── CONFIRMED │ ├── CANCELLED │ └── FAILED
+Order
 
----
+Field Type
+id Integer
+customerName String
+phone String
+product String
+amount Float
+status String
+callStatus String
+createdAt DateTime
+updatedAt DateTime
 
-## Database Schema (Initial)
+⸻
 
-### Order
+Order Status Lifecycle
 
-| Field        | Type     |
-| ------------ | -------- |
-| id           | Integer  |
-| customerName | String   |
-| phone        | String   |
-| product      | String   |
-| amount       | Float    |
-| status       | String   |
-| createdAt    | DateTime |
-| updatedAt    | DateTime |
+Order Status
 
----
+PENDING
+CONFIRMED
+CANCELLED
 
-## Development Roadmap
+Call Status
 
-### Phase 1
+NOT_CALLED
+CALLING
+COMPLETED
+FAILED
 
-Project Foundation
+⸻
 
-- [ ] Next.js Setup
-- [ ] Prisma Setup
-- [ ] PostgreSQL Setup
-- [ ] Order Model
+Agent Architecture
 
-### Phase 2
+OrderConfirmationAgent
+
+Responsibilities:
+
+- Start confirmation workflow
+- Trigger voice provider
+- Confirm order
+- Cancel order
+- Update order state
+
+Methods
+
+start(order)
+confirm(order_id)
+cancel(order_id)
+
+⸻
+
+API Endpoints
+
+Frontend
+
+Orders
+
+GET /api/orders
+
+Get all orders.
+
+POST /api/orders
+
+Create a new order.
+
+PATCH /api/orders/{id}/status
+
+Update order status.
+
+⸻
+
+Backend
+
+Agent
+
+POST /call
+
+Start confirmation workflow.
+
+POST /confirm/{order_id}
+
+Confirm order.
+
+POST /cancel/{order_id}
+
+Cancel order.
+
+⸻
+
+Completed Features
+
+Platform Foundation
+
+- Next.js Application
+- FastAPI Backend
+- PostgreSQL Database
+- Neon Database Integration
+- Prisma ORM
+- Database Migrations
 
 Order Management
 
-- [ ] Create Order Page
-- [ ] Order List Page
-- [ ] API Endpoints
+- Create Order Form
+- Orders Dashboard
+- Orders API
+- Database Persistence
 
-### Phase 3
+Agent System
 
-Voice Confirmation
+- Agent Layer
+- Voice Provider Abstraction
+- Automatic Agent Triggering
+- Confirm Workflow
+- Cancel Workflow
 
-- [ ] Twilio Integration
-- [ ] Outbound Calls
-- [ ] DTMF Input Handling
-- [ ] Confirmation Workflow
+Dashboard
 
-### Phase 4
+- Live Status Updates
+- Polling-based Refresh
+- Call Status Tracking
 
-Automation
+⸻
 
-- [ ] Retry Logic
-- [ ] Call Logs
-- [ ] Status Updates
+Milestone 2
 
-### Phase 5
+Real Voice Calling
 
-AI Agent
+Planned features:
 
-- [ ] Conversational Confirmation
-- [ ] Intent Detection
-- [ ] Multi-language Support
+- Twilio Integration
+- Outbound Calls
+- DTMF Input Detection
+- Press 1 Confirmation
+- Press 2 Cancellation
+- Call Logs
+- Retry Logic
+- Failed Call Handling
 
----
+⸻
 
-## Current Progress
+Milestone 3
 
-### Completed
+AI Voice Agent
 
-- [x] FastAPI Backend Initialized
-- [x] Python Virtual Environment Created
-- [x] Basic Health Check Endpoint Running
+Planned features:
 
-### In Progress
+- Conversational AI Calls
+- OpenAI Integration
+- Multi-language Support
+- Intent Detection
+- Smart Confirmation Flows
 
-- [ ] PostgreSQL Installation
-- [ ] Prisma Initialization
-- [ ] Order Database Schema
+⸻
 
----
+Future Roadmap
 
-## Vision
+- Shopify Integration
+- WooCommerce Integration
+- WhatsApp Confirmation
+- SMS Fallback
+- Customer Analytics
+- Fraud Detection
+- Multi-Tenant SaaS
+- Billing & Subscription System
+- Admin Portal
 
-Build a scalable AI-powered order verification platform for e-commerce businesses that automates customer confirmation, reduces operational costs, and improves order quality through voice-based verification workflows.
+⸻
+
+Current Status
+
+Project State
+
+Milestone 1 Complete ✅
+
+Working End-to-End Flow
+
+Order Created
+↓
+Stored in Neon
+↓
+FastAPI Agent Triggered
+↓
+Agent Action Executed
+↓
+Order Updated
+↓
+Dashboard Updated
+
+Next Objective
+
+Implement real outbound calling using a telephony provider and complete the voice confirmation workflow.

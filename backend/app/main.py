@@ -5,6 +5,7 @@ app = FastAPI(title="AI Order Confirmation Agent")
 
 app.include_router(call_router)
 
+
 @app.get("/")
 def health():
     return {
