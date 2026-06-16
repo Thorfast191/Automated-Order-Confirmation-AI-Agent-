@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Order" ADD COLUMN     "callStatus" TEXT NOT NULL DEFAULT 'NOT_CALLED';
